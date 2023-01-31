@@ -244,10 +244,11 @@ const App: React.FC = () => {
             Difficulty:
             {currentQuestion.difficulty}
           </p>
-          <p>
+          <p data-cy="question">
             Question: {currentQuestion.question}
           </p>
           <button
+            data-testid="answer-button"
             onClick={() =>
               handleAnswer(
                 currentQuestion.correct_answer
@@ -277,6 +278,7 @@ const App: React.FC = () => {
                 <label>
                   Category:
                   <select
+                    data-cy="cat-options"
                     onChange={(e) =>
                       setSelectedCategory(
                         e.target.value
@@ -300,6 +302,7 @@ const App: React.FC = () => {
                 <label>
                   Difficulty:
                   <select
+                    data-cy="diff-options"
                     onChange={(e) =>
                       setSelectedDifficulty(
                         e.target.value

@@ -1,5 +1,5 @@
 {
-  "name": "ai-quiz-app",
+  "name": "quiz-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -24,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "test:cypress": "cypress run"
   },
   "eslintConfig": {
     "extends": [

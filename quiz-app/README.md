@@ -20,7 +20,12 @@ Launches the test runner in the interactive watch mode.
 
 ## Tests
 
-I have only managed to use a simple unit test.
+I have a unit test. And a BDD test that plays a round.
+For these I've used Cypress.
+
+## `npm run test:cypress`
+
+Runs the Cypress test.
 
 ## Design
 
