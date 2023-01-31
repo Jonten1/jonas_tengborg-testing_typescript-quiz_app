@@ -17,3 +17,11 @@ You will also see any lint errors in the console.
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.
+
+## Tests
+
+I have only managed to use a simple unit test.
+
+## Design
+
+I have tried to follow the DRY an YAGNI method much as possible.
