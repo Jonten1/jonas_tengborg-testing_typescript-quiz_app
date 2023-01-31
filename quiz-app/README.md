@@ -30,3 +30,7 @@ Runs the Cypress test.
 ## Design
 
 I have tried to follow the DRY an YAGNI method much as possible.
+
+## Diagram
+
+You can find all the diagrams in the 'diagram' folder
