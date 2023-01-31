@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   useState,
   useEffect,
@@ -13,15 +14,18 @@ console.log(
   process.env
     .REACT_APP_MY_ENVIRONMENT_VARIABLE_CALCULATION
 );
-const TimeKey =
+const TimeKey = Number(
   process.env
-    .REACT_APP_MY_ENVIRONMENT_VARIABLE_TIME;
+    .REACT_APP_MY_ENVIRONMENT_VARIABLE_TIME
+);
+
 const AmountKey =
   process.env
     .REACT_APP_MY_ENVIRONMENT_VARIABLE_AMOUNT;
-const ScoreKey =
-  process.env
-    .REACT_APP_MY_ENVIRONMENT_VARIABLE_CALCULATION;
+
+// const ScoreKey =
+//   process.env
+//     .REACT_APP_MY_ENVIRONMENT_VARIABLE_CALCULATION;
 interface Question {
   category: string;
   type: string;
@@ -30,14 +34,8 @@ interface Question {
   correct_answer: string;
   incorrect_answers: string[];
 }
-interface Category {
-  id: string;
-  name: string;
-  number: number;
-}
 
 const App: React.FC = () => {
-  const [totalScore, setTotalScore] = useState(0);
   const [difficultyNumber, setDifficultyNumber] =
     useState(0);
   const [selectedCategory, setSelectedCategory] =
@@ -49,6 +47,7 @@ const App: React.FC = () => {
   const [questions, setQuestions] = useState<
     Question[]
   >([]);
+  const [totalScore, setTotalScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] =
     useState<Question | null>(null);
   const [score, setScore] = useState(0);
@@ -57,7 +56,7 @@ const App: React.FC = () => {
   >([]);
   const [hideUser, setHideUser] = useState(false);
   const [timeRemaining, setTimeRemaining] =
-    useState(30);
+    useState(TimeKey);
 
   const defaultFormState: UserProps = {
     userName: ''
@@ -127,7 +126,6 @@ const App: React.FC = () => {
     }
     fetchCategories();
   }, []);
-
   const Start = () => {
     const url = `https://opentdb.com/api.php?amount=${AmountKey}&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple`;
     fetch(url)
@@ -152,7 +150,7 @@ const App: React.FC = () => {
     if (!currentQuestion) {
       return;
     }
-    setTimeRemaining(30);
+    setTimeRemaining(TimeKey);
 
     const index = questions.findIndex(
       (question) => question === currentQuestion
@@ -323,7 +321,7 @@ const App: React.FC = () => {
                   </select>
                 </label>
               </form>
-              <button onClick={Start}>
+              <button id="Start" onClick={Start}>
                 Start
               </button>
             </>
