@@ -29,14 +29,14 @@ export const Question = () => {
     totalScore,
     setTotalScore,
     difficultyMultiplier
-  } = useContext(ScoreCtx);
+  } = useContext(ScoreCtx) || {};
   const { setChangeQuizState, setError } =
-    useContext(QuizStateCtx);
+    useContext(QuizStateCtx) || {};
   const [loading, setLoading] =
     useState<boolean>(true);
   const [answers, setAnswers] = useState<any>([]);
   const { category, difficulty } =
-    useContext(QuestionCtx);
+    useContext(QuestionCtx) || {};
   const [question, setQuestion] =
     useState<any>(null);
   const [threeSec, setThreeSec] =
@@ -51,22 +51,71 @@ export const Question = () => {
     thirtySecActivate,
     setThirtySecActivate
   ] = useState<boolean>(false);
+  const difficultyArray = [1, 3, 5];
+  const { setDifficultyMultiplier } =
+    useContext(ScoreCtx) || {};
 
   const handleAnswer = (e: any) => {
     setRound(round + 1);
     setThirtySecActivate(false);
-    setChangeQuizState('selectCategory');
 
     if (e === question.correctAnswer) {
       setCorrectAnswers(correctAnswers + 1);
+      setChangeQuizState('selectCategory');
       setContinualCorrectAnswers(
         continualCorrectAnswers + 1
       );
       setTotalScore(
         Math.floor(totalScore + thirtySec)
       );
+      if (difficulty === 'random') {
+        setDifficultyMultiplier(
+          difficultyArray[
+            Math.floor(Math.random() * 3)
+          ]
+        );
+      }
     } else {
       setContinualCorrectAnswers(0);
+      setLoading(true);
+      setThreeSec(3);
+      setThreeSecActivate(true);
+      if (difficulty === 'random') {
+        setDifficultyMultiplier(
+          difficultyArray[
+            Math.floor(Math.random() * 3)
+          ]
+        );
+      }
+      if (threeSec === 0) {
+        const fetchQuestion =
+          async (): Promise<void> => {
+            try {
+              const response = await fetchQuiz(
+                category,
+                difficulty
+              );
+              setThirtySec(33);
+              setThirtySecActivate(true);
+              setQuestion(response.pop());
+              if (response.statusText >= 400) {
+                throw new Error(
+                  'Bad response from server'
+                );
+              }
+            } catch (error: any) {
+              setError('Error');
+            }
+          };
+        fetchQuestion();
+        if (difficulty === 'random') {
+          setDifficultyMultiplier(
+            difficultyArray[
+              Math.floor(Math.random() * 3)
+            ]
+          );
+        }
+      }
     }
   };
 
@@ -123,29 +172,45 @@ export const Question = () => {
     if (threeSecActivate) {
       intervalThree = setInterval(() => {
         setThreeSec(
-          (prevthreeSec) => prevthreeSec - 1
+          (prevThreeSec) => prevThreeSec - 1
         );
       }, 1000);
     }
+
+    if (threeSec <= 0 && threeSecActivate) {
+      setThreeSecActivate(false);
+      setLoading(false);
+      setThirtySecActivate(true);
+    }
+
     if (thirtySecActivate) {
       intervalThirty = setInterval(() => {
         setThirtySec(
-          (prevthirtySec) => prevthirtySec - 1
+          (prevThirtySec) => prevThirtySec - 1
         );
       }, 1000);
     }
-    if (!threeSecActivate && intervalThree) {
-      clearInterval(intervalThree);
-    }
+
     if (!thirtySecActivate && intervalThirty) {
       clearInterval(intervalThirty);
+    }
+
+    // Reset the thirtySec state when a new question is fetched
+    if (!threeSecActivate && !thirtySecActivate) {
+      setThirtySec(QuizSettings.timePerQuestion);
     }
 
     return () => {
       if (intervalThree)
         clearInterval(intervalThree);
+      if (intervalThirty)
+        clearInterval(intervalThirty);
     };
-  }, [threeSecActivate, thirtySecActivate]);
+  }, [
+    threeSecActivate,
+    threeSec,
+    thirtySecActivate
+  ]);
 
   if (threeSecActivate && threeSec <= 0) {
     setThreeSecActivate(false);
@@ -154,7 +219,25 @@ export const Question = () => {
   }
   if (thirtySecActivate && thirtySec <= 0) {
     setThirtySecActivate(false);
-    setChangeQuizState('selectCategory');
+    const fetchQuestion =
+      async (): Promise<void> => {
+        try {
+          const response = await fetchQuiz(
+            category,
+            difficulty
+          );
+          setThirtySecActivate(true);
+          setQuestion(response.pop());
+          if (response.statusText >= 400) {
+            throw new Error(
+              'Bad response from server'
+            );
+          }
+        } catch (error: any) {
+          setError('Error');
+        }
+      };
+    fetchQuestion();
     setContinualCorrectAnswers(0);
     setRound(round + 1);
   }
@@ -176,7 +259,7 @@ export const Question = () => {
         <div>{threeSec}</div>
       ) : (
         <>
-          <div>
+          <div id="questions">
             <p>{question.question}</p>
           </div>
 

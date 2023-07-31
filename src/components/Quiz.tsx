@@ -55,6 +55,10 @@ export const Quiz = () => {
         case 'result':
           setQuizState(QuizState.RESULT);
           break;
+
+        case 'selectNewCategory':
+          setQuizState(QuizState.SELECT_CATEGORY);
+          break;
         case 'selectCategory':
         default:
           setQuizState(QuizState.SELECT_CATEGORY);

@@ -21,15 +21,15 @@ export const Categories = () => {
     setRound,
     setDifficultyMultiplier,
     setName
-  } = useContext(ScoreCtx);
+  } = useContext(ScoreCtx) || {};
   const {
     category,
     setCategory,
     difficulty,
     setDifficulty
-  } = useContext(QuestionCtx);
+  } = useContext(QuestionCtx) || {};
   const { setChangeQuizState, setError } =
-    useContext(QuizStateCtx);
+    useContext(QuizStateCtx) || {};
   const handleCategory = (event: string) => {
     setCategory(event);
     setChangeQuizState('playing');
@@ -93,6 +93,7 @@ export const Categories = () => {
         setDifficulty
       }}
     >
+      <div>{round}</div>
       {round < 1 && (
         <div>
           <input
@@ -103,7 +104,7 @@ export const Categories = () => {
             className="nameInput"
             placeholder="Name"
           />
-          <div>
+          <div id="difficultyMenu">
             <select
               className={'difficultyMenu'}
               defaultValue={'easy'}
@@ -125,9 +126,17 @@ export const Categories = () => {
             </select>
           </div>
 
-          <button onClick={() => handleStart()}>
-            Start
-          </button>
+          <div
+            data-testid="container"
+            id="container"
+          >
+            <button
+              id="start-quiz"
+              onClick={() => handleStart()}
+            >
+              Start
+            </button>
+          </div>
         </div>
       )}
       {round > 0 && (

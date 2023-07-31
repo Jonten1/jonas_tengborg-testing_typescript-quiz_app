@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import {QuizSettings} from "../../src/utils/QuizSettings";
 describe("Quiz App", () => {
   it("should select difficulty, enter name and start the Quiz", () => {
@@ -10,13 +11,18 @@ describe("Quiz App", () => {
 
     cy.contains("Start").click();
     for (let i = 0; i < QuizSettings.questionsPerRound; i++) {
-      cy.get("button.buttonCat")
+      cy.get('.App').then((App) => {
+        if (App.find("button.buttonCat").length > 0) {
+          cy.get("button.buttonCat")
         .then((categoryButtons) => {
           const randomCat = Math.floor(
             Math.random() * categoryButtons.length
           );
           cy.wrap(categoryButtons).eq(randomCat).click();
         });
+        }
+      })
+
 
       cy.wait(4500);
 

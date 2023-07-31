@@ -1,5 +1,17 @@
+/* eslint-disable testing-library/no-node-access */
 import { calculateScore } from '../utils/Utils';
 import { fetchCategories } from '../api/Api';
+import { Question } from '../components/Question';
+import { Categories } from '../components/Categories';
+
+import {
+  fireEvent,
+  queryByAttribute,
+  getByTestId,
+  getByText,
+  render,
+  screen
+} from '@testing-library/react';
 
 // eslint-disable-next-line jest/valid-title
 test('fetchCategories returns Object ', async () => {
@@ -8,6 +20,17 @@ test('fetchCategories returns Object ', async () => {
   expect(
     Object.keys(response).length
   ).toBeGreaterThan(0);
+  expect(Object.keys(response)).not.toBeNull();
+});
+// test('Render categories', () => {
+//   render(<Categories />);
+//   const element = screen.getByTestId('container');
+// });
+test('No questions render at start', () => {
+  render(<Question />);
+  const container =
+    document.querySelector('#questions');
+  expect(container).toBeNull();
 });
 
 describe('calculateScore', () => {
@@ -35,5 +58,7 @@ describe('calculateScore', () => {
     );
 
     expect(actualScore).toBe(expectedScore);
+    expect(actualScore).not.toBeNull();
+    expect(actualScore).not.toBeNaN();
   });
 });
